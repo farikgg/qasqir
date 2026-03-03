@@ -1,4 +1,5 @@
 import logging
+from dataclasses import field
 
 from dotenv import load_dotenv
 from pathlib import Path
@@ -32,7 +33,7 @@ class GreenAPISettings(_ProjectBaseSettings):
     instance_id: str = Field(..., alias="GREEN_API_INSTANCE_ID")
     api_token: str = Field(..., alias="GREEN_API_TOKEN")
     api_host: str = "https://api.green-api.com"
-    core_url: str = "http://localhost:8001"
+    core_url: str = Field(default="http://0.0.0.0:8001", alias="CORE_URL")
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 

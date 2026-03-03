@@ -41,10 +41,9 @@ async def receive_webhook(payload: GreenWebhookData):
             text_data = message_data.get("extendedTextMessageData", {})
             content = text_data.get("text", "")
 
-        # 3. КНОПКИ (НОВЫЙ ТИП - interactiveButtonsResponse)
         elif msg_type == "interactiveButtonsResponse":
             btn_data = message_data.get("interactiveButtonsResponse", {})
-            content = btn_data.get("selectedButtonId")
+            content = btn_data.get("selectedButtonId") or btn_data.get("selectedId")
             final_type = "button_reply"
 
         elif msg_type == "buttonsResponseMessage":
