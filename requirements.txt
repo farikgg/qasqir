@@ -8,3 +8,7 @@ python-dotenv==1.2.1
 pydantic-settings==2.13.0
 SQLAlchemy==2.0.46
 uvicorn==0.41.0
+langchain==0.1.0
+langchain-core==0.1.10
+langchain-community==0.0.10
+langchain-groq==0.0.1
