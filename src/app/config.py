@@ -32,12 +32,19 @@ class DataBaseSettings(_ProjectBaseSettings):
     database_url: str = Field(..., alias="DATABASE_URL")
 
 
+class GroqSettings(_ProjectBaseSettings):
+    api_key: str = Field(..., alias="GROQ_API_KEY")
+    model: str = Field(default="llama-3.3-70b-versatile", alias="GROQ_MODEL")
+
+
 class AppSettings(_ProjectBaseSettings):
     environment: Literal["local", "dev", "prod"] = Field(default="local", validation_alias="APP_ENV")
     app_name: str = Field(default="Qasqir Core")
-    gateway_url: str = Field(default="http://localhost:8000", validation_alias="GATEWAY_URL")
+    gateway_url: str = Field(default="http://0.0.0.0:8000", validation_alias="GATEWAY_URL")
     debug: bool = Field(default=False, validation_alias="APP_DEBUG")
     database_settings: DataBaseSettings = Field(default_factory=DataBaseSettings)
+    groq_settings: GroqSettings = Field(default_factory=GroqSettings)
+    # test_phone_number: str = Field(default="", validation_alias="TEST_PHONE_NUMBER")
 
 @lru_cache
 def get_settings() -> AppSettings:

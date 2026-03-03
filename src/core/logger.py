@@ -13,7 +13,7 @@ def setup_logger() -> logging.Logger:
     """Логирование"""
     settings = get_settings()
 
-    logger = logging.getLogger("qasqir-backend")
+    logger = logging.getLogger("qasqir-core")
     logger.setLevel(logging.DEBUG if settings.debug else logging.INFO)
 
     formatter = logging.Formatter(
