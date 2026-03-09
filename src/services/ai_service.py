@@ -5,22 +5,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from src.app.config import get_settings
-from src.bot.answers import TextRu
 from src.bot.prompt import SYSTEM_PROMPT_TEMPLATE, NAME_EXTRACTION_PROMPT
 from src.bot.knowledge import KnowledgeBaseService
-from src.bot.rag_service import RagService
+from src.services.rag_service import RagService
 from src.core.models import Message, User
 from src.core.logger import logger
 
 settings = get_settings().groq_settings
-
-STATIC_KNOWLEDGE = f"""
-    ОБЩИЕ ПРАВИЛА И ССЫЛКИ:
-    {TextRu.APP_LINKS}
-    {TextRu.LOW_BATTERY}
-    {TextRu.KASPI}
-    {TextRu.REFUND}
-    """
 
 
 class LangChainService:
@@ -62,17 +53,14 @@ class LangChainService:
         rag = RagService(self.db)
         found_stations = await rag.search(user_text, limit=3)
 
-        # Если ничего не нашли, пишем "информации нет", чтобы ИИ не выдумывал
         rag_context = found_stations if found_stations else "Нет информации о конкретных станциях по этому запросу."
 
-        # 2. Сборка полного контекста
-        full_knowledge = f"{STATIC_KNOWLEDGE}\n\nНАЙДЕННЫЕ СТАНЦИИ:\n{rag_context}"
+        full_knowledge = f"{self.knowledge_base}\n\nНАЙДЕННЫЕ СТАНЦИИ:\n{rag_context}"
 
-        # 3. Формирование промпта
         formatted_system = SYSTEM_PROMPT_TEMPLATE.format(
             user_name=self.user.name or "Друг",
             language="Русский" if self.user.language == "ru" else "Казахский",
-            knowledge_base=full_knowledge  # 👈 Вставляем умный контекст
+            knowledge_base=full_knowledge
         )
 
         prompt = ChatPromptTemplate.from_messages([
