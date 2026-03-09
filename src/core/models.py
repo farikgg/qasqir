@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String, DateTime, Integer, Text, ForeignKey, func
 from sqlalchemy.orm import relationship
+from pgvector.sqlalchemy import Vector
 
 from src.core.database import Base
 
@@ -29,3 +30,12 @@ class Message(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     user = relationship("User", back_populates="messages")
+
+
+class KnowledgeChunk(Base):
+    __tablename__ = "knowledge_chunks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    content = Column(Text)  # Текст станции
+
+    embedding = Column(Vector(384))

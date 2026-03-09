@@ -35,6 +35,7 @@ class DataBaseSettings(_ProjectBaseSettings):
 class GroqSettings(_ProjectBaseSettings):
     api_key: str = Field(..., alias="GROQ_API_KEY")
     model: str = Field(default="llama-3.3-70b-versatile", alias="GROQ_MODEL")
+    voice_model: str = Field(default="whisper-large-v3", alias="VOICE_MODEL")
 
 
 class AppSettings(_ProjectBaseSettings):
@@ -44,7 +45,6 @@ class AppSettings(_ProjectBaseSettings):
     debug: bool = Field(default=False, validation_alias="APP_DEBUG")
     database_settings: DataBaseSettings = Field(default_factory=DataBaseSettings)
     groq_settings: GroqSettings = Field(default_factory=GroqSettings)
-    # test_phone_number: str = Field(default="", validation_alias="TEST_PHONE_NUMBER")
 
 @lru_cache
 def get_settings() -> AppSettings:
