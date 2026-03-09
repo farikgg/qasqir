@@ -46,6 +46,11 @@ async def receive_webhook(payload: GreenWebhookData):
             content = btn_data.get("selectedButtonId") or btn_data.get("selectedId")
             final_type = "button_reply"
 
+        elif msg_type == "audioMessage":
+            file_data = message_data.get("fileMessageData", {})
+            content = file_data.get("downloadUrl", "")
+            final_type = "voice"
+
         elif msg_type == "buttonsResponseMessage":
             btn_data = message_data.get("buttonsResponseMessage", {})
             content = btn_data.get("selectedButtonId")
@@ -57,11 +62,11 @@ async def receive_webhook(payload: GreenWebhookData):
             final_type = "button_reply"
 
         else:
-            logger.info(f"⚠️ Unknown message type: {msg_type}")
+            logger.info(f"⚠️ Неизвестный тип сообщения: {msg_type}")
             return {"status": "ignored", "reason": f"unsupported_type_{msg_type}"}
 
         if not content:
-            logger.info(f"⚠️ Empty content for type {msg_type}. Data: {message_data}")
+            logger.info(f"⚠️ Нет контента в {msg_type}. Данные: {message_data}")
             return {"status": "error", "reason": "empty_content"}
 
         dto = CoreMessageDTO(
