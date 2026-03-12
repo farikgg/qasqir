@@ -1,4 +1,4 @@
-from langchain_groq import ChatGroq
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.messages import HumanMessage, AIMessage
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,21 +11,21 @@ from src.services.rag_service import RagService
 from src.core.models import Message, User
 from src.core.logger import logger
 
-settings = get_settings().groq_settings
+settings = get_settings().gemini_settings
 
 
 class LangChainService:
     def __init__(self, db: AsyncSession, user: User):
         self.db = db
         self.user = user
-        self.llm = ChatGroq(
-            temperature=0.3,
+        self.llm = ChatGoogleGenerativeAI(
+            api_key=settings.api_key,
             model=settings.model,
-            api_key=settings.api_key
+            temperature=0.3
         )
         self.knowledge_base = KnowledgeBaseService.build_knowledge_base()
 
-    async def get_history_messages(self, limit=10):
+    async def get_history_messages(self, limit=5):
         result = await self.db.execute(
             select(Message)
             .where(Message.user_id == self.user.phone_number)
@@ -77,7 +77,7 @@ class LangChainService:
             ai_text = response.content
         except Exception as e:
             logger.error(f"❌ Groq Chat Error: {e}")
-            return "ИИ танцует подождите"
+            return "Сервис с ИИ временно недоступен. Извиняемся за неудобство 😔"
 
         await self.save_message("ai", ai_text)
         return ai_text

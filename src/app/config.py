@@ -32,10 +32,9 @@ class DataBaseSettings(_ProjectBaseSettings):
     database_url: str = Field(..., alias="DATABASE_URL")
 
 
-class GroqSettings(_ProjectBaseSettings):
-    api_key: str = Field(..., alias="GROQ_API_KEY")
-    model: str = Field(default="llama-3.3-70b-versatile", alias="GROQ_MODEL")
-    voice_model: str = Field(default="whisper-large-v3", alias="VOICE_MODEL")
+class GeminiSettings(_ProjectBaseSettings):
+    api_key: str = Field(..., alias="GEMINI_API_KEY")
+    model: str = Field(default="gemini-2.5-flash", alias="GOOGLE_MODEL")
 
 
 class AppSettings(_ProjectBaseSettings):
@@ -44,7 +43,7 @@ class AppSettings(_ProjectBaseSettings):
     gateway_url: str = Field(default="http://0.0.0.0:8000", validation_alias="GATEWAY_URL")
     debug: bool = Field(default=False, validation_alias="APP_DEBUG")
     database_settings: DataBaseSettings = Field(default_factory=DataBaseSettings)
-    groq_settings: GroqSettings = Field(default_factory=GroqSettings)
+    gemini_settings: GeminiSettings = Field(default_factory=GeminiSettings)
 
 @lru_cache
 def get_settings() -> AppSettings:
