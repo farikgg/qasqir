@@ -24,7 +24,7 @@ class RagService:
 
         await self.db.commit()
 
-    async def search(self, query: str, limit: int = 3) -> str:
+    async def search(self, query: str, limit: int = 5) -> str:
         """Ищет 3 самые похожие станции"""
         query_vector = embeddings_model.embed_query(query)
 

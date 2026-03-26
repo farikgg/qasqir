@@ -21,7 +21,8 @@ class LangChainService:
         self.llm = ChatGoogleGenerativeAI(
             api_key=settings.api_key,
             model=settings.model,
-            temperature=0.3
+            temperature=0.3,
+            max_tokens=1500
         )
         self.knowledge_base = KnowledgeBaseService.build_knowledge_base()
 
